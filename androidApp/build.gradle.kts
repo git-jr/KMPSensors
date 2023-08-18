@@ -36,3 +36,6 @@ android {
         jvmToolchain(11)
     }
 }
+dependencies {
+    implementation("androidx.compose.foundation:foundation-layout-android:1.5.0")
+}
