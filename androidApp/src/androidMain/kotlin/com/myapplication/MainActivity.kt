@@ -195,23 +195,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
                 Log.d("teste", "valor na Esquerda $valueToBeChangedOnTheLeft")
                 Log.d("teste", "valor na Direita $valueToBeChangedOnTheRight")
-
-
-                // turn left
-                if (inclination in -180..0) {
-//                    peakHeightFactor -= 0.01f
-//                    dipHeightFactor += 0.01f
-                }
-
-                // turn right
-                if (inclination in 1..180) {
-//                    peakHeightFactor += 0.01f
-//                    dipHeightFactor -= 0.01f
-                }
-
-                // Limit the factors to avoid them going out of the desired limits (max and min)
-//                peakHeightFactor = peakHeightFactor.coerceIn(0.1f, 0.4f)
-//                dipHeightFactor = dipHeightFactor.coerceIn(0.5f, 0.8f)
             }
         }
     }
