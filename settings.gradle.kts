@@ -1,4 +1,4 @@
-rootProject.name = "MyApplication"
+rootProject.name = "ComposeSensors"
 
 include(":androidApp")
 include(":shared")

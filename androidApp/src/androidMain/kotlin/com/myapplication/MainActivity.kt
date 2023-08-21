@@ -1,5 +1,9 @@
 package com.myapplication
 
+//import androidx.compose.animation.core.Spring
+//import androidx.compose.animation.core.animateFloatAsState
+//import androidx.compose.animation.core.spring
+//import androidx.compose.foundation.Canvas
 import MainView
 import android.content.Context
 import android.hardware.Sensor
@@ -10,28 +14,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.unit.dp
 import kotlin.math.PI
 
 
@@ -43,102 +28,110 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var gravity: FloatArray? = null
     private var geomagnetic: FloatArray? = null
 
-    private var valueToBeChangedOnTheLeft by mutableFloatStateOf(4f)
-    private var valueToBeChangedOnTheRight by mutableFloatStateOf(4f)
+    private var valueToBeChangedOnTheLeft by mutableStateOf(4f)
+    private var valueToBeChangedOnTheRight by mutableStateOf(4f)
 
-    private var rotate by mutableFloatStateOf(0f)
+    private var rotate by mutableStateOf(0f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initSensors()
-
         setContent {
-            val animatedOffset by animateFloatAsState(
-                targetValue = rotate,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessLow
-                ), label = "animated rotation"
-            )
-
-
-            Box {
-                Box(
-                    modifier = Modifier
-                        .rotate(animatedOffset)
-                        .fillMaxSize()
-                ) {
-                    MainView()
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Box(
-                        modifier = Modifier
-                            .alpha(0.5f)
-                            .fillMaxWidth()
-                            .weight(1f),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-
-                        var width: Float
-                        var height = 1080f
-
-
-                        val startHeight by animateFloatAsState(
-                            targetValue = height / valueToBeChangedOnTheLeft,
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioHighBouncy,
-                                stiffness = Spring.StiffnessLow
-                            ), label = "animate of the start height"
-                        )
-
-                        val endHeight by animateFloatAsState(
-                            targetValue = height / valueToBeChangedOnTheRight,
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioHighBouncy,
-                                stiffness = Spring.StiffnessLow
-                            ), label = "animate of the end height"
-                        )
-
-                        Canvas(
-                            modifier = Modifier
-                                .size(500.dp)
-                        ) {
-                            width = size.width
-                            height = size.height
-
-                            val peakHeight = height * 0.2f
-                            val dipHeight = height * 0.2f
-
-                            val path = Path().apply {
-                                moveTo(-50f, startHeight + 100)  // Começa no canto esquerdo
-                                cubicTo(
-                                    width * 0.33f, peakHeight,  // Primeiro ponto de controle
-                                    width * 0.66f, dipHeight,  // Segundo ponto de controle
-                                    width + 50, endHeight + 100  // Termina no canto direito
-                                )
-                                lineTo(width + 50, height)  // Vai para a borda inferior direita
-                                lineTo(-50f, height)  // Vai para a borda inferior esquerda
-                                close()  // Fecha o Path, voltando ao ponto inicial
-                            }
-
-                            drawPath(path, color = Color(255, 0, 0), style = Stroke(width = 50f))
-
-                            drawPath(path, color = Color(0, 30, 255, 255), style = Fill)
-
-                        }
-                    }
-                }
-            }
+            MainView()
         }
+
+        //initSensors()
+
+        // Old()
     }
+
+//    private fun Old() {
+//        setContent {
+//            val animatedOffset by animateFloatAsState(
+//                targetValue = rotate,
+//                animationSpec = spring(
+//                    dampingRatio = Spring.DampingRatioHighBouncy,
+//                    stiffness = Spring.StiffnessLow
+//                ), label = "animated rotation"
+//            )
+//
+//
+//            Box {
+//                Box(
+//                    modifier = Modifier
+//                        .rotate(animatedOffset)
+//                        .fillMaxSize()
+//                ) {
+//                    MainView()
+//                }
+//
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxSize(),
+//                    verticalArrangement = Arrangement.Bottom,
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//
+//                    Box(
+//                        modifier = Modifier
+//                            .alpha(0.5f)
+//                            .fillMaxWidth()
+//                            .weight(1f),
+//                        contentAlignment = Alignment.BottomCenter
+//                    ) {
+//
+//                        var width: Float
+//                        var height = 1080f
+//
+//
+//                        val startHeight by animateFloatAsState(
+//                            targetValue = height / valueToBeChangedOnTheLeft,
+//                            animationSpec = spring(
+//                                dampingRatio = Spring.DampingRatioHighBouncy,
+//                                stiffness = Spring.StiffnessLow
+//                            ), label = "animate of the start height"
+//                        )
+//
+//                        val endHeight by animateFloatAsState(
+//                            targetValue = height / valueToBeChangedOnTheRight,
+//                            animationSpec = spring(
+//                                dampingRatio = Spring.DampingRatioHighBouncy,
+//                                stiffness = Spring.StiffnessLow
+//                            ), label = "animate of the end height"
+//                        )
+//
+//                        Canvas(
+//                            modifier = Modifier
+//                                .size(500.dp)
+//                        ) {
+//                            width = size.width
+//                            height = size.height
+//
+//                            val peakHeight = height * 0.2f
+//                            val dipHeight = height * 0.2f
+//
+//                            val path = Path().apply {
+//                                moveTo(-50f, startHeight + 100)  // Começa no canto esquerdo
+//                                cubicTo(
+//                                    width * 0.33f, peakHeight,  // Primeiro ponto de controle
+//                                    width * 0.66f, dipHeight,  // Segundo ponto de controle
+//                                    width + 50, endHeight + 100  // Termina no canto direito
+//                                )
+//                                lineTo(width + 50, height)  // Vai para a borda inferior direita
+//                                lineTo(-50f, height)  // Vai para a borda inferior esquerda
+//                                close()  // Fecha o Path, voltando ao ponto inicial
+//                            }
+//
+//                            drawPath(path, color = Color(255, 0, 0), style = Stroke(width = 50f))
+//
+//                            drawPath(path, color = Color(0, 30, 255, 255), style = Fill)
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 
     private fun initSensors() {
@@ -169,7 +162,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         if (gravity != null && geomagnetic != null) {
             val firstArrayOfRotation = FloatArray(9)
             val seconArrayOfRotation = FloatArray(9)
-            val success = SensorManager.getRotationMatrix(firstArrayOfRotation, seconArrayOfRotation, gravity, geomagnetic)
+            val success = SensorManager.getRotationMatrix(
+                firstArrayOfRotation,
+                seconArrayOfRotation,
+                gravity,
+                geomagnetic
+            )
             if (success) {
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(firstArrayOfRotation, orientation)
