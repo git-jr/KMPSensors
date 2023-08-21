@@ -1,9 +1,5 @@
 package com.myapplication
 
-//import androidx.compose.animation.core.Spring
-//import androidx.compose.animation.core.animateFloatAsState
-//import androidx.compose.animation.core.spring
-//import androidx.compose.foundation.Canvas
 import MainView
 import android.content.Context
 import android.hardware.Sensor

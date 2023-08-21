@@ -31,8 +31,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.unit.dp
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import model.AluraAPI
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -42,8 +50,15 @@ private var valueToBeChangedOnTheLeft by mutableStateOf(0f)
 private var valueToBeChangedOnTheRight by mutableStateOf(0f)
 private var rotate by mutableStateOf(0)
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
+
+
+    LaunchedEffect(Unit) {
+        val profile = getProfile()
+        println("Olha aqui oh: $profile")
+    }
 
     LaunchedEffect(Unit) {
         if (getPlatformName() == "ios") {
@@ -59,8 +74,11 @@ fun App() {
     MaterialTheme {
         Box(
             Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.BottomCenter
         ) {
+
+
+            // tabs
             TabScreen(
                 modifier = Modifier,
                 hasMovedToLeft = {
@@ -112,10 +130,45 @@ fun App() {
                 }
             )
 
+            // wave
             SimpleWave(
                 modifier = Modifier
                     .alpha(0.5f)
             )
+
+
+            // image
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                var greetingText by remember { mutableStateOf("Hello, World!") }
+                var showImage by remember { mutableStateOf(false) }
+
+
+                Button(onClick = {
+                    greetingText = "Hello, ${getPlatformName()}"
+                    showImage = !showImage
+                }) {
+                    Text(greetingText)
+                }
+                AnimatedVisibility(
+                    enter = fadeIn() + expandVertically(
+                        spring(
+                            dampingRatio = Spring.DampingRatioHighBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    ),
+                    visible = showImage
+                ) {
+                    KamelImage(
+                        asyncPainterResource("https://liquipedia.net/commons/images/2/2e/Going_Merry_Cartoon.png"),
+                        null
+                    )
+                }
+            }
+
+
         }
     }
 }
@@ -124,18 +177,15 @@ fun App() {
 private fun SimpleWave(modifier: Modifier) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .background(Color.Red),
-        verticalArrangement = Arrangement.Center,
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(Color.LightGray),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.BottomCenter
         ) {
-
             var width: Float
             var height = 1080f
 
@@ -225,6 +275,19 @@ fun AppOld() {
             }
         }
     }
+}
+
+val httpClient = HttpClient {
+    install(ContentNegotiation) {
+        json()
+    }
+}
+
+suspend fun getProfile(): AluraAPI {
+    val profile = httpClient
+        .get("https://www.alura.com.br/api/dashboard/682f477ae8b1c348c0c5a53cbd94f7def5c8fb260b2028da7c0fa1a8618c75ee")
+        .body<AluraAPI>()
+    return profile
 }
 
 expect fun getPlatformName(): String
