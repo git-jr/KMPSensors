@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.mvvm.compose.getViewModel
 import dev.icerock.moko.mvvm.compose.viewModelFactory
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -56,7 +55,7 @@ fun App() {
 @Composable
 private fun MainScreen(viewModel: ViewModel) {
 
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.profileUiState.collectAsState()
     val scope = rememberCoroutineScope()
 
     Box(
@@ -216,7 +215,7 @@ private fun SimpleWave(
                     )  // Vai para a borda inferior esquerda  + 1000 de profunidade para quanodo tela for deslisada para baixo
                     close()  // Fecha o Path, voltando ao ponto inicial
                 }
-                drawPath(path, color = Color.Blue, style = Fill)
+                drawPath(path, color = Color(1, 8, 14), style = Fill)
             }
         }
     }

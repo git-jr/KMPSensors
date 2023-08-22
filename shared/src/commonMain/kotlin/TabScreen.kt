@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 @Composable
 fun TabScreen(
     modifier: Modifier = Modifier,
-    state: UiState,
+    state: ProfileUiState,
     hasMovedToLeft: () -> Unit = {},
     hasMovedToRight: () -> Unit = {},
     onScroll: (Int) -> Unit = {}
 ) {
-    val textTabs = listOf("Cursos", "Guias")
+    val textTabs = listOf("Cursos em progresso", "Guias de estudo")
     val pagerState = rememberPagerState()
 
     LaunchedEffect(pagerState.currentPage) {

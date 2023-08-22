@@ -1,14 +1,23 @@
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import extensions.timestampToDisplayDate
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.datetime.Instant
@@ -31,20 +43,32 @@ fun CourseProgressesScreen(
     state: List<CourseProgresse>,
     onScroll: (Int) -> Unit = {}
 ) {
-    if (state.isEmpty()) {
+    val gradientBackgroundColor =
+        Brush.verticalGradient(listOf(Color.Blue.copy(0.4f), Color(1, 8, 14)))
+
+    AnimatedVisibility(
+        state.isEmpty(),
+        exit = fadeOut()
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .background(gradientBackgroundColor)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Nenhum curso em progresso no momento",
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
+                color = Color.White,
+                fontSize = 16.sp,
             )
         }
-    } else {
-        val brush = Brush.verticalGradient(listOf(Color.Blue.copy(0.2f), Color.Blue))
-
+    }
+    AnimatedVisibility(
+        state.isNotEmpty(),
+        enter = fadeIn()
+    ) {
         val scrollState = rememberScrollState()
 
         LaunchedEffect(scrollState.value) {
@@ -53,7 +77,7 @@ fun CourseProgressesScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
-                .background(brush)
+                .background(gradientBackgroundColor)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -64,10 +88,18 @@ fun CourseProgressesScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "Cursos em progresso",
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    modifier = Modifier
+                        .background(Color(2, 17, 24).copy(0.2f), shape = CircleShape)
+                        .border(1.dp, Color.Black.copy(0.5f), shape = CircleShape)
+                        .padding(16.dp),
+                ) {
+                    Text(
+                        "Cursos em progresso",
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                    )
+                }
             }
             val tempList = state + state + state
             tempList.forEach { courseProgresse ->
@@ -80,58 +112,72 @@ fun CourseProgressesScreen(
 @Composable
 fun CourseItem(course: CourseProgresse) {
 
-//    data class CourseProgresse(
-//        val finished: Boolean,
-//        val id: Int,
-//        val lastAccessTime: Long,
-//        val name: String,
-//        val progress: Int,
-//        val readyToFinish: Boolean,
-//        val slug: String
-//    )
+    val linearColors = Brush.linearGradient(
+        listOf(
+            Color.Gray.copy(0.2f),
+            Color.White.copy(0.1f),
+            Color.Gray.copy(0.2f)
+        )
+    )
 
-
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        /// image icon is https://www.alura.com.br/assets/api/cursos/SLUGHERE.svg
-        Box(
+    Box(modifier = Modifier.height(IntrinsicSize.Max)) {
+        Row(
             modifier = Modifier
-                .weight(2f),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .background(linearColors, shape = RoundedCornerShape(16.dp))
+                .fillMaxHeight()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            KamelImage(
-                asyncPainterResource("https://www.alura.com.br/assets/api/cursos/${course.slug}.svg"),
-                contentDescription = "Logo curso de ${course.name}",
-                modifier = Modifier
-                    .size(50.dp),
-            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
-        Column(
-            modifier = Modifier.weight(8f),
-            verticalArrangement = Arrangement.Center
+
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = course.name,
-            )
-            Text("Progresso: ${course.progress}")
-            Text("Último acesso: ${course.lastAccessTime.timestampToDisplayDate()}")
-            Text("Pronto para finalizar: ${course.readyToFinish}")
+            Box(
+                modifier = Modifier
+                    .weight(2f),
+                contentAlignment = Alignment.Center
+            ) {
+                KamelImage(
+                    asyncPainterResource("https://www.alura.com.br/assets/api/cursos/${course.slug}.svg"),
+                    contentDescription = "Logo curso de ${course.name}",
+                    modifier = Modifier
+                        .size(50.dp),
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(8f)
+                    .padding(top = 8.dp, bottom = 8.dp, end = 8.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = course.name,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+
+                Text(
+                    "Progresso: ${course.progress}%",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+                Text(
+                    "Último acesso: ${course.lastAccessTime.timestampToDisplayDate()}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+            }
         }
     }
 }
 
-fun Long.timestampToDisplayDate(): String {
 
-    // coverting a data like "1629780000000" (alura api pattern) to "23/08/2021 às 16:00"
-    val dateTime =
-        Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
-    return "${dateTime.dayOfMonth.toString().padStart(2, '0')}/${
-        dateTime.monthNumber.toString().padStart(2, '0')
-    }/${dateTime.year} às ${dateTime.hour.toString().padStart(2, '0')}:${
-        dateTime.minute.toString().padStart(2, '0')
-    }"
-}

@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.Profile
 
-data class UiState(
+data class ProfileUiState(
     val profile: Profile,
 )
 
 class ViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(profile = Profile()))
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _profileUiState = MutableStateFlow(ProfileUiState(profile = Profile()))
+    val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     init {
         updateProfile()
@@ -36,7 +36,7 @@ class ViewModel : ViewModel() {
     private fun updateProfile() {
         viewModelScope.launch {
             val profile = getProfile()
-            _uiState.update {
+            _profileUiState.update {
                 it.copy(profile = profile)
             }
         }
