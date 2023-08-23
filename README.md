@@ -1,5 +1,5 @@
 # KMP Sensors
-![thumb](https://github.com/git-jr/KMPSensors/assets/35709152/a5a003a6-02d4-442a-aa6c-3c9af7cf3a45)
+![thumb](https://github.com/git-jr/KMPSensors/assets/35709152/8f39bf63-53b1-4af3-aaad-934dd3074de9)
 
 
 > **Nota**
@@ -10,7 +10,11 @@ A versão do Android ainda utiliza alguns sensores do dispositivo para criar ani
 
 ### 🎨 Preview Android - IOS
 
-https://github.com/git-jr/KMPSensors/assets/35709152/5592ff30-cea2-42ac-8be1-349bc0b90fb8
+
+
+
+https://github.com/git-jr/KMPSensors/assets/35709152/ce306d47-025d-44c9-a24e-770daf5e513a
+
 
 
 ### 💻 Algumas tecnologias em uso no momento
