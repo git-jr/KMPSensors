@@ -1,3 +1,5 @@
+package ui
+
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -11,17 +13,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import model.Profile
 
-data class ProfileUiState(
-    val profile: Profile,
-)
-
 class ViewModel : ViewModel() {
     private val _profileUiState = MutableStateFlow(ProfileUiState(profile = Profile()))
     val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
-
-    init {
-        updateProfile()
-    }
 
     override fun onCleared() {
         httpClient.close()
@@ -33,7 +27,7 @@ class ViewModel : ViewModel() {
         }
     }
 
-    private fun updateProfile() {
+    fun updateProfile() {
         viewModelScope.launch {
             val profile = getProfile()
             _profileUiState.update {
@@ -44,8 +38,21 @@ class ViewModel : ViewModel() {
 
     private suspend fun getProfile(): Profile {
         val profile = httpClient
-            .get("https://www.alura.com.br/api/dashboard/682f477ae8b1c348c0c5a53cbd94f7def5c8fb260b2028da7c0fa1a8618c75ee")
+//            .get("https://www.alura.com.br/api/dashboard/682f477ae8b1c348c0c5a53cbd94f7def5c8fb260b2028da7c0fa1a8618c75ee")
+            .get(profileUiState.value.apiUrl)
             .body<Profile>()
         return profile
     }
+
+    fun updateApiUrl(url: String) {
+        _profileUiState.update {
+            it.copy(apiUrl = url)
+        }
+        updateProfile()
+    }
 }
+
+data class ProfileUiState(
+    val profile: Profile,
+    val apiUrl: String = ""
+)

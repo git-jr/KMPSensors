@@ -1,3 +1,5 @@
+package ui
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,17 +32,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import extensions.hexToRgbColor
 import extensions.timestampToDisplayDate
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import model.CourseProgresse
+import model.Guide
+
 
 @Composable
-fun CourseProgressesScreen(
-    state: List<CourseProgresse>,
+fun GuidesScreen(
+    state: List<Guide>,
     onScroll: (Int) -> Unit = {}
 ) {
     val gradientBackgroundColor =
@@ -58,10 +57,9 @@ fun CourseProgressesScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Nenhum curso em progresso no momento",
+                text = "Nenhum guia em progresso no momento",
                 textAlign = TextAlign.Center,
-                color = Color.White,
-                fontSize = 16.sp,
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -95,22 +93,23 @@ fun CourseProgressesScreen(
                         .padding(16.dp),
                 ) {
                     Text(
-                        "Cursos em progresso",
+                        "Guias de estudo",
                         textAlign = TextAlign.Center,
                         color = Color.White,
+                        fontSize = 16.sp,
                     )
                 }
             }
             val tempList = state + state + state
-            tempList.forEach { courseProgresse ->
-                CourseItem(courseProgresse)
+            tempList.forEach { guia ->
+                GuideItem(guia)
             }
         }
     }
 }
 
 @Composable
-fun CourseItem(course: CourseProgresse) {
+fun GuideItem(guide: Guide) {
 
     val linearColors = Brush.linearGradient(
         listOf(
@@ -143,11 +142,11 @@ fun CourseItem(course: CourseProgresse) {
                     .weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                KamelImage(
-                    asyncPainterResource("https://www.alura.com.br/assets/api/cursos/${course.slug}.svg"),
-                    contentDescription = "Logo curso de ${course.name}",
+                Box(
                     modifier = Modifier
-                        .size(50.dp),
+                        .size(50.dp)
+                        .padding(4.dp)
+                        .background(guide.color.hexToRgbColor(), shape = CircleShape)
                 )
             }
             Column(
@@ -157,20 +156,27 @@ fun CourseItem(course: CourseProgresse) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = course.name,
+                    text = guide.name,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
 
                 Text(
-                    "Progresso: ${course.progress}%",
+                    "Formação: ${guide.author}%",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
                 Text(
-                    "Último acesso: ${course.lastAccessTime.timestampToDisplayDate()}",
+                    "Último acesso: ${guide.lastAccessTime.timestampToDisplayDate()}",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                )
+
+                Text(
+                    "Passos concluidos: ${guide.finishedSteps} de ${guide.totalSteps}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -179,5 +185,4 @@ fun CourseItem(course: CourseProgresse) {
         }
     }
 }
-
 

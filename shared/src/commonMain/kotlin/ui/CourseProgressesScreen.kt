@@ -1,3 +1,5 @@
+package ui
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,14 +32,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import extensions.hexToRgbColor
 import extensions.timestampToDisplayDate
-import model.Guide
-
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import io.ktor.http.Url
+import model.CourseProgresse
 
 @Composable
-fun GuidesScreen(
-    state: List<Guide>,
+fun CourseProgressesScreen(
+    state: List<CourseProgresse>,
     onScroll: (Int) -> Unit = {}
 ) {
     val gradientBackgroundColor =
@@ -55,9 +58,10 @@ fun GuidesScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Nenhum guia em progresso no momento",
+                text = "Nenhum curso em progresso no momento",
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxSize()
+                color = Color.White,
+                fontSize = 16.sp,
             )
         }
     }
@@ -91,22 +95,22 @@ fun GuidesScreen(
                         .padding(16.dp),
                 ) {
                     Text(
-                        "Guias de estudo",
+                        "Cursos em progresso",
                         textAlign = TextAlign.Center,
                         color = Color.White,
+                        fontSize = 16.sp,
                     )
                 }
             }
-            val tempList = state + state + state
-            tempList.forEach { guia ->
-                GuideItem(guia)
+            state.forEach { courseProgresse ->
+                CourseItem(courseProgresse)
             }
         }
     }
 }
 
 @Composable
-fun GuideItem(guide: Guide) {
+fun CourseItem(course: CourseProgresse) {
 
     val linearColors = Brush.linearGradient(
         listOf(
@@ -139,11 +143,11 @@ fun GuideItem(guide: Guide) {
                     .weight(2f),
                 contentAlignment = Alignment.Center
             ) {
-                Box(
+                KamelImage(
+                    asyncPainterResource(Url("https://www.alura.com.br/assets/api/cursos/${course.slug}.svg")),
+                    contentDescription = "Logo curso ${course.name}",
                     modifier = Modifier
-                        .size(50.dp)
-                        .padding(4.dp)
-                        .background(guide.color.hexToRgbColor(), shape = CircleShape)
+                        .size(50.dp),
                 )
             }
             Column(
@@ -153,27 +157,20 @@ fun GuideItem(guide: Guide) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = guide.name,
+                    text = course.name,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
 
                 Text(
-                    "Formação: ${guide.author}%",
+                    "Progresso: ${course.progress}%",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                 )
                 Text(
-                    "Último acesso: ${guide.lastAccessTime.timestampToDisplayDate()}",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                )
-
-                Text(
-                    "Passos concluidos: ${guide.finishedSteps} de ${guide.totalSteps}",
+                    "Último acesso: ${course.lastAccessTime.timestampToDisplayDate()}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -182,4 +179,5 @@ fun GuideItem(guide: Guide) {
         }
     }
 }
+
 
