@@ -1,4 +1,4 @@
-package ui
+package ui.tabs
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ui.home.ProfileUiState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -17,7 +18,8 @@ fun TabScreen(
     state: ProfileUiState,
     hasMovedToLeft: () -> Unit = {},
     hasMovedToRight: () -> Unit = {},
-    onScroll: (Int) -> Unit = {}
+    onScroll: (Int) -> Unit = {},
+    animatedMainRotate: Float
 ) {
     val textTabs = listOf("Cursos em progresso", "Guias de estudo")
     val pagerState = rememberPagerState()
@@ -38,6 +40,7 @@ fun TabScreen(
             if (page == 0) {
                 CourseProgressesScreen(
                     state = state.profile.courseProgresses,
+                    animatedMainRotate = animatedMainRotate,
                     onScroll = {
                         onScroll(it)
                     }

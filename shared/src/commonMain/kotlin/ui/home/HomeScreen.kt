@@ -1,4 +1,4 @@
-package ui
+package ui.home
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -28,15 +28,19 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ui.tabs.TabScreen
 
-var horizontalPagerInAction by mutableStateOf(false)
-var valueToBeChangedOnTheLeft by mutableStateOf(3f)
-var valueToBeChangedOnTheRight by mutableStateOf(3f)
-var rotate by mutableStateOf(0f)
+private var horizontalPagerInAction by mutableStateOf(false)
+private var valueToBeChangedOnTheLeft by mutableStateOf(3f)
+private var valueToBeChangedOnTheRight by mutableStateOf(3f)
+private var rotate by mutableStateOf(0f)
 
 
 @Composable
-fun HomeScreen(viewModel: ViewModel) {
+fun HomeScreen(
+    viewModel: ViewModel,
+    animatedMainRotate: Float = 0f
+) {
     val state by viewModel.profileUiState.collectAsState()
     val scope = rememberCoroutineScope()
 
@@ -68,6 +72,7 @@ fun HomeScreen(viewModel: ViewModel) {
         TabScreen(
             modifier = Modifier,
             state = state,
+            animatedMainRotate = animatedMainRotate,
             onScroll = {
                 offsetWave = it.toFloat()
             },

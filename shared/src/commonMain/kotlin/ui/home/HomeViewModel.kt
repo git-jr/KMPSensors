@@ -1,4 +1,4 @@
-package ui
+package ui.home
 
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import io.ktor.client.HttpClient
@@ -38,15 +38,15 @@ class ViewModel : ViewModel() {
 
     private suspend fun getProfile(): Profile {
         val profile = httpClient
-//            .get("https://www.alura.com.br/api/dashboard/682f477ae8b1c348c0c5a53cbd94f7def5c8fb260b2028da7c0fa1a8618c75ee")
             .get(profileUiState.value.apiUrl)
             .body<Profile>()
         return profile
     }
 
-    fun updateApiUrl(url: String) {
+    fun updateApiUrl(url: String?) {
+        val apiUrl = url ?: "https://git-jr.github.io/mock-apis/alura-api.json"
         _profileUiState.update {
-            it.copy(apiUrl = url)
+            it.copy(apiUrl = apiUrl)
         }
         updateProfile()
     }
