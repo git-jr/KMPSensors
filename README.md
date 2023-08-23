@@ -1,5 +1,31 @@
-[![official project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# KMP Sensors
+![thumb](https://github.com/git-jr/KMPSensors/assets/35709152/a5a003a6-02d4-442a-aa6c-3c9af7cf3a45)
+
+
+> **Nota**
+> A base deste repositório foi gerada através do [JetBrains Compose Multiplatform iOS Android template](https://github.com/JetBrains/compose-multiplatform-ios-android-template), que é uma versão limpa do projeto, quase 100% pronta para rodar no Android e iOS. Você só precisa realizar algumas configurações, conforme descritas abaixo na seção "Compose Multiplatform mobile application", e começar a criar coisas incríveis com um único código para as duas plataformas.
+
+Esse projeto consome a [API Dashboard da Alura](https://suporte.alura.com.br/support/solutions/articles/72000565226-api-do-dashboard-para-alunos-e-alunas) para exibir uma lista de cursos e guias de estudo em progresso de uma conta de usuário específica (ou uma API mock que eu criei para facilitar as coisas hehe), junto de algumas animações criadas com Jetpack Compose e o melhor, o mesmo código rodando tanto no Android, quanto no iOS para iPhone.
+A versão do Android ainda utiliza alguns sensores do dispositivo para criar animações em tela conforme o celular é movimentado.
+
+### 🎨 Preview Android - IOS
+
+https://github.com/git-jr/KMPSensors/assets/35709152/5592ff30-cea2-42ac-8be1-349bc0b90fb8
+
+
+### 💻 Algumas tecnologias em uso no momento
+- UI e Animações: Jetpack Compose
+- MVVM: Através de ViewModels no Compose com a lib [Moko mvvm](https://github.com/icerockdev/moko-mvvm)
+- Rest API: Através da lib [Ktor](https://ktor.io/docs/welcome.html) para requisições, em conjunto com [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) para lidar com jsons.
+- Carregamento de imagens: [Kamel](https://github.com/Kamel-Media/Kamel)
+- Formatação de datas: [Kotlinx Datetime](https://github.com/Kotlin/kotlinx-datetime)
+‎‎‎‎‎‎‎‎ㅤ
+
+ㅤㅤ
+ㅤ
+ㅤ
+
+##### Segue o readme original para quem tiver interesse:
 # [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) mobile application
 
 > **Note**
